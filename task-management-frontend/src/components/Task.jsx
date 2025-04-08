@@ -36,7 +36,7 @@ const Task = () => {
         <caption className="text-center">Add a Task in Category</caption>
         <thead>
           <tr>
-            <th>Task Id</th>
+            {/* <th>Task Id</th> */}
             <th>Task</th>
             <th>Description</th>
             <th>Due Date</th>
@@ -48,13 +48,14 @@ const Task = () => {
           {
             tasks.map(task =>
               <tr key={task.id}>
-                <td>{task.id}</td>
+                {/* <td>{task.id}</td> */}
                 <td>{task.name}</td>
                 <td>{task.description}</td>
                 <td>{task.dueDate}</td>
                 <td>{task.category.name}</td>
                 <td>
-                  <Link className="btn btn-outline-primary mx-2" to={`/edit-task/${task.id}`}>Edit</Link>
+                  <Link className="btn btn-outline-primary mx-2" to={`/edit-task/${task.id}`}
+                  state={{categoryName: task.category.name}}>Edit</Link>
                   <button className="btn btn-outline-danger mx-2" onClick={() => deleteTask(task.id)}>Delete</button>
                 </td>
               </tr>)

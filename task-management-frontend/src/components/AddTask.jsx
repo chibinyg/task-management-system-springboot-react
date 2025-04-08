@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useLocation } from 'react-router-dom'
 import axios from 'axios';
 
 const AddTask = () => {
+
+    const { state } = useLocation();
+    const categoryName = state?.categoryName || ""; // Extract category name from state if available
 
     const navigate = useNavigate();
     const [name, setName] = useState("");
@@ -72,6 +75,16 @@ const AddTask = () => {
                                     onChange={e => setDueDate(e.target.value)}
                                     required
                                     min={new Date().toISOString().split("T")[0]} // Set minimum date to today
+                                />
+                            </div>
+                            <div className="d-flex align-items-center mb-4">
+                                <label htmlFor="Category" className="form-label me-3 mb-0">
+                                    Category:
+                                </label>
+                                <input
+                                    readOnly
+                                    className="form-control bg-light text-muted"
+                                    value={categoryName} // Display the category name for read-only
                                 />
                             </div>
                             <div className="d-flex justify-content-center gap-3">

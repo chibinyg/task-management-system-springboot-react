@@ -1,10 +1,10 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
-const Navbar = () => {
+const Header = () => {
   return (
     <div>
-          <nav className="navbar navbar-expand-lg bg-body-tertiary ">
+          <nav className="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
               <div className="container-fluid">
                   <span className="navbar-brand mb-0 h1">Task Management System</span>
                   <button className="navbar-toggler" type="button" data-bs-toggle="collapse" 
@@ -34,4 +34,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default Header

@@ -1,6 +1,6 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Navbar from './components/Navbar.jsx'
+import Header from './components/Header.jsx'
 import Home from './components/Home.jsx'
 import Category from './components/Category.jsx'
 import AddOrEditCategory from './components/AddOrEditCategory.jsx'
@@ -14,7 +14,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Navbar />
+        <Header />
         <Routes>
           {/* http://localhost:3000/ */}
           <Route path="/" element={<Home />} />
