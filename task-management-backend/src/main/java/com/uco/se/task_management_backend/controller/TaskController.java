@@ -67,4 +67,26 @@ public class TaskController {
         taskRepository.deleteById(id);
         return "Task deleted successfully!";
     }
+
+    @PutMapping("/add-reminder/{id}")
+    public Task addReminder(@PathVariable Long id, @RequestBody Task addedReminder) {
+        Task task = taskRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
+        if (addedReminder.getReminderInterval() != null) {
+            task.setReminderInterval(addedReminder.getReminderInterval());
+        }    
+        if (addedReminder.getReminderDate() != null) {
+            task.setReminderDate(addedReminder.getReminderDate());
+        }
+        return taskRepository.save(task);
+    }
+
+    @DeleteMapping("/delete-reminder/{id}")
+    public Task deleteReminder(@PathVariable Long id) {
+    Task task = taskRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+    task.setReminderDate(null);
+    task.setReminderInterval(null);
+    return taskRepository.save(task);
+    }
 }

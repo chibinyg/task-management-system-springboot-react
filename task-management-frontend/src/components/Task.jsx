@@ -56,6 +56,7 @@ const Task = () => {
                 <td>
                   <Link className="btn btn-outline-primary mx-2" to={`/edit-task/${task.id}`}>Edit</Link>
                   <button className="btn btn-outline-danger mx-2" onClick={() => deleteTask(task.id)}>Delete</button>
+                  <Link className="btn btn-outline-primary mx-2" to={`/add-reminder/${task.id}`}> {task.reminderDate ? "Update Reminder" : "Add Reminder"}</Link>
                 </td>
               </tr>)
           }

@@ -42,6 +42,12 @@ public class Task {
     @Column(nullable = false)
     private LocalDate dueDate; 
 
+    @Column
+    private String reminderInterval;    // User can choose a intervals leading up to the event (e.g., one week before, one day before).
+
+    @Column
+    private LocalDate reminderDate;     // reminderDate will store the actual date that the reminder should be sent out (dueDate - interval)
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", nullable = false)
     // This will delete all tasks associated with the category when the category is deleted
