@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios';
+import { getCategoryById, addCategory, updateCategory } from '../services/CategoryService.js';
 
 const AddOrEditCategory = () => {
 
@@ -15,14 +15,14 @@ const AddOrEditCategory = () => {
     // Populate the form with existing data if id is present
     useEffect(() => {
         if (id) {
-            getCategoryById(id);
+            fetchCategoryById(id);
         }
     }, [id])
 
     // Fecth the category data from the server by id
-    async function getCategoryById(id) {
+    async function fetchCategoryById(id) {
         try {
-            const response = await axios.get(`http://localhost:8080/categories/${id}`);
+            const response = await getCategoryById(id);
             setName(response.data.name);
         } catch (error) {
             console.error("Error fetching category:", error);
@@ -35,7 +35,7 @@ const AddOrEditCategory = () => {
         if (!id) {
             // If id is not present, create a new category
             try {
-                await axios.post("http://localhost:8080/categories", category);
+                await addCategory(category);
                 navigate("/categories");
             } catch (error) {
                 console.error("Error saving category:", error);
@@ -44,7 +44,7 @@ const AddOrEditCategory = () => {
         } else {
             // If id is present, update the existing category
             try {
-                await axios.put(`http://localhost:8080/categories/${id}`, category);
+                await updateCategory(id, category);
                 navigate("/categories");
             } catch (error) {
                 console.error("Error updating category:", error);
