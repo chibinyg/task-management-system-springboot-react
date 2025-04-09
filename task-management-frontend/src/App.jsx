@@ -8,6 +8,8 @@ import Task from './components/Task.jsx'
 import AddTask from './components/AddTask.jsx'
 import EditTask from './components/EditTask.jsx'
 import Profile from './components/Profile.jsx'
+import AddReminder from './components/AddReminder.jsx'
+
 import Registration from './components/Registration.jsx'
 import Login from './components/Login.jsx'
 import { isUserLoggedIn } from './services/AuthService.js'
@@ -83,6 +85,9 @@ function App() {
               <EditTask />
             </AuthenticatedRoute>
           } />
+
+          {/* http://localhost:3000/add-reminder/{id} */}      
+          <Route path="/add-reminder/:id" element={<AddReminder />} />
 
           {/* http://localhost:3000/profile */}
           <Route path="/profile" element={
