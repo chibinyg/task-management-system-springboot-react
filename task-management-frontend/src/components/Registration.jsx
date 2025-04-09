@@ -16,13 +16,14 @@ const Registration = () => {
         try {
             const response = await register(user);
             console.log(response.data);
-            if (response.data.status === 200) {
+            if (response.status === 200) {
                 navigate("/login");
             } else {
-                window.alert("User already exists");
+                window.alert("Registration failed");
             }
         } catch (error) {
             console.error(error);
+            window.alert("User already exists");
         }
     }
 

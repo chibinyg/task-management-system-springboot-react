@@ -30,9 +30,9 @@ public class AuthController{
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/api/auth/register")
-    public String register(@RequestBody User newUser) {
+    public ResponseEntity<String> register(@RequestBody User newUser) {
         if (userRepository.existsByUsername(newUser.getUsername())) {
-            return "Error: Username is already taken!";
+            return ResponseEntity.badRequest().body("Error: Username is already taken!");
         }
 
         // create new user's account
@@ -42,7 +42,7 @@ public class AuthController{
         user.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
         userRepository.save(user);
-        return "User registered successfully!";
+        return ResponseEntity.ok("User registered successfully!");
     }
 
     @PostMapping("/api/auth/login")
