@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import { getCategories, deleteCategory} from '../services/CategoryService'
 
 const Category = () => {
 
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    getCategories();
+    fetchCategories();
   }, [])
 
-  async function getCategories() {
+  async function fetchCategories() {
     try {
-      const response = await axios.get("http://localhost:8080/categories");
+      const response = await getCategories();
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
   }
 
-  async function deleteCategory(id) {
+  async function removeCategory(id) {
     if (window.confirm(`Are you sure you want to delete ${categories.find(category => category.id === id).name.trim()}?
     \nIt will delete all tasks within this category`)) {
       try {
-        await axios.delete(`http://localhost:8080/categories/${id}`);
-        getCategories();
+        await deleteCategory(id);
+        fetchCategories();
       } catch (error) {
         console.error("Error deleting category:", error);
       }
@@ -54,7 +54,7 @@ const Category = () => {
                     <Link className="btn btn-outline-primary mx-2" to={`/categories/${category.id}/add-task`}
                     state={{categoryName: category.name}}>Add Task</Link>
                     <Link className="btn btn-outline-primary mx-2" to={`/edit-category/${category.id}`}>Edit</Link>
-                    <button className="btn btn-outline-danger mx-2" onClick={() => deleteCategory(category.id)}>Delete</button>
+                    <button className="btn btn-outline-danger mx-2" onClick={() => removeCategory(category.id)}>Delete</button>
                   </td>
                 </tr>)
             }

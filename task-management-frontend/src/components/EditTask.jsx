@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom'
-import axios from 'axios';
+import { updateTask, getTaskById} from '../services/TaskService.js';
 
 
 const EditTask = () => {
@@ -21,14 +21,14 @@ const EditTask = () => {
     // Populate the form with existing data if id is present
     useEffect(() => {
         if (id) {
-            getTaskById(id);
+            fetchTaskById(id);
         }
     }, [id])
 
     // Fecth the task data from the server by id
-    async function getTaskById(id) {
+    async function fetchTaskById(id) {
         try {
-            const response = await axios.get(`http://localhost:8080/tasks/${id}`);
+            const response = await getTaskById(id);
             setName(response.data.name);
             setDescription(response.data.description);
             setDueDate(response.data.dueDate);
@@ -41,7 +41,7 @@ const EditTask = () => {
             e.preventDefault();
     
             try {
-                await axios.put(`http://localhost:8080/tasks/${id}`, task);
+                await updateTask(id, task);
                 navigate("/tasks");
             } catch (error) {
                 console.error("Error updating task:", error);

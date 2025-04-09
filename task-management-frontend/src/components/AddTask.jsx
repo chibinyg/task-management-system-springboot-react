@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom'
-import axios from 'axios';
+import { addTask } from '../services/TaskService.js';
 
 const AddTask = () => {
 
@@ -21,7 +21,7 @@ const AddTask = () => {
         e.preventDefault();
 
         try {
-            await axios.post(`http://localhost:8080/categories/${categoryId}/tasks`, task);
+            await addTask(categoryId, task);
             navigate("/tasks");
         } catch (error) {
             console.error("Error saving task:", error);
