@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios';
+import { Link, useNavigate, useParams, useLocation } from 'react-router-dom'
+import { updateTask, getTaskById} from '../services/TaskService.js';
 
 
 const EditTask = () => {
+
+    const { state } = useLocation();
+    const categoryName = state?.categoryName || ""; // Extract category name from state if available
 
     const navigate = useNavigate();
     const [name, setName] = useState("");
@@ -18,14 +21,14 @@ const EditTask = () => {
     // Populate the form with existing data if id is present
     useEffect(() => {
         if (id) {
-            getTaskById(id);
+            fetchTaskById(id);
         }
     }, [id])
 
     // Fecth the task data from the server by id
-    async function getTaskById(id) {
+    async function fetchTaskById(id) {
         try {
-            const response = await axios.get(`http://localhost:8080/tasks/${id}`);
+            const response = await getTaskById(id);
             setName(response.data.name);
             setDescription(response.data.description);
             setDueDate(response.data.dueDate);
@@ -38,7 +41,7 @@ const EditTask = () => {
             e.preventDefault();
     
             try {
-                await axios.put(`http://localhost:8080/tasks/${id}`, task);
+                await updateTask(id, task);
                 navigate("/tasks");
             } catch (error) {
                 console.error("Error updating task:", error);
@@ -92,6 +95,16 @@ const EditTask = () => {
                                     onChange={e => setDueDate(e.target.value)}
                                     required
                                     min={new Date().toISOString().split("T")[0]} // Set minimum date to today
+                                />
+                            </div>
+                            <div className="d-flex align-items-center mb-4">
+                                <label htmlFor="Category" className="form-label me-3 mb-0">
+                                    Category:
+                                </label>
+                                <input
+                                    readOnly
+                                    className="form-control bg-light text-muted"
+                                    value={categoryName} // Display the category name for read-only
                                 />
                             </div>
                             <div className="d-flex justify-content-center gap-3">
