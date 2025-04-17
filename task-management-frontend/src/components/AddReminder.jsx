@@ -1,7 +1,7 @@
 // Add/update/delete reminders
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { getTaskById, addReminder, deleteReminder} from '../services/TaskService.js';
 
 const AddReminder = () => {
     const navigate = useNavigate();
@@ -16,19 +16,19 @@ const AddReminder = () => {
 
     useEffect(() => {
         if (id) {
-            getTaskById(id);
+            fetchTaskById(id);
         }
     }, [id]);
 
-    async function getTaskById(id) {
+    async function fetchTaskById(id) {
         try {
-            const response = await axios.get(`http://localhost:8080/tasks/${id}`);
+            const response = await getTaskById(id);
             setName(response.data.name);
             setDescription(response.data.description);
             setDueDate(response.data.dueDate);
             setReminderInterval(response.data.reminderInterval || "");
             setReminderDate(response.data.reminderDate || "");
-            
+
             setTitle((response.data.reminderDate || "") === "" ? "Add Reminder" : "Update Reminder");
         } catch (error) {
             console.error("Error fetching task:", error);
@@ -36,9 +36,9 @@ const AddReminder = () => {
         }
     }
 
-    async function deleteReminder() {
+    async function removeReminder() {
         try {
-            await axios.delete(`http://localhost:8080/delete-reminder/${id}`);
+            await deleteReminder(id);
             navigate("/tasks");
         } catch (error) {
             console.error("Error deleting reminder:", error);
@@ -83,7 +83,7 @@ const AddReminder = () => {
         }
     };
 
-    async function addReminder(e) {
+    async function createReminder(e) {
         e.preventDefault();
         
         if (!reminderInterval) {
@@ -100,7 +100,7 @@ const AddReminder = () => {
         };
 
         try {
-            await axios.put(`http://localhost:8080/add-reminder/${id}`, task);
+            await addReminder(id, task);
             navigate("/tasks");
         } catch (error) {
             console.error("Error adding a reminder:", error);
@@ -114,7 +114,7 @@ const AddReminder = () => {
                 <div className="card col-md-6 offset-md-3">
                     <h2 className="text-center mt-3">{title}</h2>
                     <div className="card-body">
-                        <form onSubmit={addReminder}>
+                        <form onSubmit={createReminder}>
                             <div className="d-flex align-items-center mb-4">
                                 <label htmlFor="task" className="form-label me-3 mb-0">
                                     Task:
@@ -206,7 +206,7 @@ const AddReminder = () => {
                                         className="btn btn-danger"
                                         onClick={() => {
                                             if (window.confirm("Are you sure you want to delete this reminder?")) {
-                                                deleteReminder();
+                                                removeReminder();
                                             }
                                         }}
                                     >
