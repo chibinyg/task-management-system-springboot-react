@@ -23,3 +23,7 @@ export const addTask = (categoryId, task) => axios.post(`${API_URL}/categories/$
 export const updateTask = (id, task) => axios.put(`${API_URL}/tasks/${id}`, task);
 
 export const deleteTask = (id) => axios.delete(`${API_URL}/tasks/${id}`);
+
+export const addReminder = (id, task) => axios.put(`${API_URL}/add-reminder/${id}`, task);
+
+export const deleteReminder = (id) => axios.delete(`${API_URL}/delete-reminder/${id}`);
