@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uco.se.task_management_backend.exception.ResourceNotFoundException;
 import com.uco.se.task_management_backend.model.Category;
+import com.uco.se.task_management_backend.model.User;
 import com.uco.se.task_management_backend.repository.CategoryRepository;
+import com.uco.se.task_management_backend.security.SecurityUtils;
 
 @RestController
 @CrossOrigin("*")
@@ -23,25 +25,33 @@ public class CategoryController {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
     @PostMapping("/categories")
     public Category createCategory(@RequestBody Category newCategory) {
+        User currentUser = securityUtils.getCurrentUser();
+        newCategory.setUser(currentUser);
         return categoryRepository.save(newCategory);
     }
 
     @GetMapping("/categories")
     public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+        User currentUser = securityUtils.getCurrentUser();
+        return categoryRepository.findByUser(currentUser);
     }
 
     @GetMapping("/categories/{id}")
     public Category getCategoryById(@PathVariable Long id) {
-        return categoryRepository.findById(id)
+        User currentUser = securityUtils.getCurrentUser();
+        return categoryRepository.findByIdAndUser(id, currentUser)
             .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
     }
 
     @PutMapping("/categories/{id}")
     public Category updateCategory(@PathVariable Long id, @RequestBody Category updatedCategory) {
-        Category category = categoryRepository.findById(id)
+        User currentUser = securityUtils.getCurrentUser();
+        Category category = categoryRepository.findByIdAndUser(id, currentUser)
             .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
         category.setName(updatedCategory.getName());
         return categoryRepository.save(category);
@@ -49,9 +59,10 @@ public class CategoryController {
 
     @DeleteMapping("/categories/{id}")
     public String deleteCategory(@PathVariable Long id) {
-        categoryRepository.findById(id)
+        User currentUser = securityUtils.getCurrentUser();
+        Category category = categoryRepository.findByIdAndUser(id, currentUser)
             .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
-        categoryRepository.deleteById(id);
+        categoryRepository.delete(category);
         return "Category deleted successfully!";
     }
 }
