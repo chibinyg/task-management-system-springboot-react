@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uco.se.task_management_backend.exception.ResourceNotFoundException;
+import com.uco.se.task_management_backend.model.Category;
 import com.uco.se.task_management_backend.model.Task;
+import com.uco.se.task_management_backend.model.User;
 import com.uco.se.task_management_backend.repository.CategoryRepository;
 import com.uco.se.task_management_backend.repository.TaskRepository;
+import com.uco.se.task_management_backend.security.SecurityUtils;
 
 @RestController
 @CrossOrigin("*")
@@ -28,31 +31,47 @@ public class TaskController {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
     // Create a new task for a specific category
     @PostMapping("/categories/{categoryId}/tasks")
     public Task createTask(@PathVariable Long categoryId, @RequestBody Task newTask) {
-       return categoryRepository.findById(categoryId)
-            .map(category -> {
-                newTask.setCategory(category);
-                return taskRepository.save(newTask);
-            })
+        // Get the current user
+        User currentUser = securityUtils.getCurrentUser();
+        // Find the category by ID and user
+        Category category = categoryRepository.findByIdAndUser(categoryId, currentUser)
             .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
+        // Set the category for the new task
+        newTask.setCategory(category);
+        // Set the user for the new task
+        newTask.setUser(currentUser);
+        // Save the new task
+        return taskRepository.save(newTask);
     }
 
     @GetMapping("/tasks")
     public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+        // Get the current user
+        User currentUser = securityUtils.getCurrentUser();
+        // Find all tasks for the current user
+        return taskRepository.findByUser(currentUser);
     }
 
     @GetMapping("/tasks/{id}")
     public Task getTaskById(@PathVariable Long id) {
-        return taskRepository.findById(id)
+        // Get the current user
+        User currentUser = securityUtils.getCurrentUser();
+        // Find the task by ID and user
+        return taskRepository.findByIdAndUser(id, currentUser)
             .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
     }
 
     @PutMapping("/tasks/{id}")
     public Task updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
-        Task task = taskRepository.findById(id)
+        // Get the current user
+        User currentUser = securityUtils.getCurrentUser();
+        Task task = taskRepository.findByIdAndUser(id, currentUser)
             .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
         task.setName(updatedTask.getName());
         task.setDescription(updatedTask.getDescription());
@@ -62,15 +81,19 @@ public class TaskController {
 
     @DeleteMapping("/tasks/{id}")
     public String deleteTask(@PathVariable Long id) {
-        taskRepository.findById(id)
+        // Get the current user
+        User currentUser = securityUtils.getCurrentUser();
+        Task task = taskRepository.findByIdAndUser(id, currentUser)
             .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
-        taskRepository.deleteById(id);
+        taskRepository.delete(task);
         return "Task deleted successfully!";
     }
 
     @PutMapping("/add-reminder/{id}")
     public Task addReminder(@PathVariable Long id, @RequestBody Task addedReminder) {
-        Task task = taskRepository.findById(id)
+        // Get the current user
+        User currentUser = securityUtils.getCurrentUser();
+        Task task = taskRepository.findByIdAndUser(id, currentUser)
             .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
         if (addedReminder.getReminderInterval() != null) {
             task.setReminderInterval(addedReminder.getReminderInterval());
@@ -83,7 +106,9 @@ public class TaskController {
 
     @DeleteMapping("/delete-reminder/{id}")
     public Task deleteReminder(@PathVariable Long id) {
-    Task task = taskRepository.findById(id)
+    // Get the current user
+    User currentUser = securityUtils.getCurrentUser();
+    Task task = taskRepository.findByIdAndUser(id, currentUser)
         .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
     task.setReminderDate(null);
     task.setReminderInterval(null);

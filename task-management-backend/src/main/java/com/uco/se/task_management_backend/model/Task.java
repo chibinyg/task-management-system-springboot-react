@@ -55,4 +55,10 @@ public class Task {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Category category;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private User user;
+
 }
