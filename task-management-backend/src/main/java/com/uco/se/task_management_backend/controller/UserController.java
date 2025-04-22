@@ -31,6 +31,8 @@ public class UserController {
     public User updateUser(@RequestBody User updatedUser) {
         User currentUser = securityUtils.getCurrentUser();
         currentUser.setEmail(updatedUser.getEmail());
-        return userRepository.save(currentUser); // should this function have this?
+        currentUser.setFirstName(updatedUser.getFirstName());
+        currentUser.setLastName(updatedUser.getLastName());
+        return userRepository.save(currentUser);
     }
 }

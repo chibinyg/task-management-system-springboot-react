@@ -16,4 +16,4 @@ axios.interceptors.request.use(function (config) {
 
 export const getUser = () => axios.get(API_URL)
 
-export const updateUser = () => axios.put(`${API_URL}/update-user`, user)
+export const updateUser = (user) => axios.put(`${API_URL}/update-user`, user)
