@@ -8,11 +8,13 @@ const Registration = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
     const navigate = useNavigate()
 
     async function handleRegistration(e) {
         e.preventDefault();
-        const user = { username, password, email };
+        const user = { username, password, email, firstName, lastName };
         try {
             const response = await register(user);
             console.log(response.data);
@@ -37,6 +39,31 @@ const Registration = () => {
                         </div>
                         <div className='card-body'>
                             <form>
+                                <div className='row mb-3'>
+                                    <div className='col-md-6 mb-3 mb-md-0'>
+                                        <label className='form-label'>First Name</label>
+                                        <input
+                                            type='text'
+                                            className='form-control'
+                                            name='firstName'
+                                            placeholder='Enter your first name'
+                                            value={firstName}
+                                            onChange={(e) => setFirstName(e.target.value)}
+                                        />
+                                    </div>
+
+                                    <div className='col-md-6'>
+                                        <label className='form-label'>Last Name</label>
+                                        <input
+                                            type='text'
+                                            className='form-control'
+                                            name='lastName'
+                                            placeholder='Enter your last name'
+                                            value={lastName}
+                                            onChange={(e) => setLastName(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
                                 <div className='row mb-3'>
                                     <label className='col-md-3 control-label'>Username</label>
                                     <div className='col-md-9'>
@@ -84,8 +111,8 @@ const Registration = () => {
 
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 
