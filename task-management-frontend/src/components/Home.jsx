@@ -72,7 +72,7 @@ const Task = () => {
       </div>
 
       {/* Task Table */}
-      <table className="table caption-top table-success table-bordered table-hover">
+      <table className="table caption-top table-success table-bordered table-striped">
         <caption className="text-center">Filtered by Category & Due Date</caption>
         <thead>
           <tr>
