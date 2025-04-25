@@ -23,7 +23,7 @@ public class TaskReminderService {
 
     // Runs daily at 9 AM using the reminderDate field
     @Transactional
-    @Scheduled(cron = "0 47 22 * * ?")
+    @Scheduled(cron = "0 0 9 * * ?")
     public void sendScheduledReminders() {
         LocalDate today = LocalDate.now();
         List<Task> tasks = taskRepository.findTasksForReminder(today);
