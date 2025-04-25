@@ -36,7 +36,7 @@ const Profile = () => {
 
         try {
             await updateUser(user);
-            navigate("/home"); 
+            navigate("/profile"); 
         } catch (error) {
             console.error("Error updating profile:", error);
         }
